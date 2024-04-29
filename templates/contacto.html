@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PeriquitosMex - Contacto</title>
+  <!-- External stylesheet for Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+  <!-- Link to custom stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-FH9JT502WW"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-FH9JT502WW');
+</script>
+<body>
+
+<!-- Sidebar/menu -->
+{% include 'sidebar-menu.html' %}
+
+<!-- Top menu only on small screens -->
+<header class="container1 responsiveTitle hideLarge">
+  <!-- Button to open sidebar -->
+  <a href="javascript:void(0)" onclick="action_open()" class="hamburguer">Ξ</a>
+  <span>PeriquitosMex</span>
+</header>
+
+<!-- Dark overlay effect when opening sidebar on small screens -->
+<div class="overlay hideLarge" onclick="action_close()" style="cursor:pointer" id="myOverlay"></div>
+
+<!-- Main content -->
+<div class="mainContainer">
+
+  <div class="container1">
+    <!-- Section title -->
+    <h1 class="titulo titulocontacto"><b>Contacto PMX</b></h1>
+    <!-- Horizontal line separator -->
+    <hr style="width:50px;border:5px solid rgb(204, 185, 15)" class="w3-round">
+    <!-- Section content -->
+    <p class="paragraph1">
+        ¡Gracias por visitarnos!
+    </p>
+    <p class="paragraph1">
+    Nos encanta saber de ti y estamos aquí para ayudarte en lo que necesites. Ya sea que tengas preguntas, comentarios 
+    o simplemente quieras saludar, no dudes en ponerte en contacto con nosotros. Utiliza el formulario de contacto a 
+    continuación. 
+    </p>
+    <p class="paragraph1">
+        Si lo prefieres, puedes entrar a nuestro grupo en <a href="https://www.facebook.com/groups/PeriquitosMexAC/">Facebook</a> y por ahí también podemos ayudarte!</p>
+        </p>
+    <div id="form-main">
+        <div id="form-div">
+          <form class="montform" id="reused_form" enctype="{{ enctype }}">
+            <p class="name">
+                <input name="name" type="text" class="feedback-input" required placeholder="Nombre completo" id="name" />
+            </p>
+            <p class="email">
+              <input name="email" type="email" required  class="feedback-input" id="email" placeholder="Email" />
+            </p>
+            <p class="text">
+              <textarea name="message" class="feedback-input" id="comment" placeholder="Escribe aqui tu mensaje"></textarea>
+            </p>
+            <div class="submit">
+              <button type="submit" class="contact-button">Enviar</button>
+              <div class="ease"></div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+</div>
+<!-- End page content -->
+
+<!-- Footer -->
+{% include 'footer.html' %}
+<!-- Script for sidebar functionality -->
+<script src="{{ url_for('static', filename='scripts.js') }}"></script>
+<script src="{{ url_for('static', filename='common-navbar.js') }}"></script>
+<script id="ratufa_loader" src="https://www.ratufa.io/c/ld.js?f=uq0x9vso&n=n1.ratufa.io"></script>
+</body>
+</html>

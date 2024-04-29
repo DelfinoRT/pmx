@@ -1,0 +1,19 @@
+<!-- Sidebar/menu -->
+<nav class="sidebar hideSmall" id="mySidebar">
+  <div class="container1">
+    <div class="small-logo">
+      <!-- Logo image. Ensure the path is correctly set up in your server settings. -->
+      <img src="{{ url_for('static', filename='images/pmx-logo-round.png') }}" alt="Company Logo">
+    </div>
+  </div>
+  <div class="navMenu">
+    <!-- Navigation links with Flask url_for for routing -->
+    <a href="{{ url_for('home') }}" id="homeLink" class="navButton" onclick="action_close();">Inicio</a>
+    <a href="{{ url_for('eventos') }}" id="eventosLink" class="navButton" onclick="action_close();">Eventos</a>
+    <a href="{{ url_for('contenido') }}" id="contenidoLink" class="navButton" onclick="action_close();">Contenido</a>
+    <a href="{{ url_for('miembros') }}" id="miembrosLink" class="navButton" onclick="action_close();">Miembros</a>
+    <a href="{{ url_for('galeria') }}" id="galeriaLink" class="navButton" onclick="action_close();">Galería</a>
+    <a href="{{ url_for('formatos') }}" id="formatosLink" class="navButton" onclick="action_close();">Formatos</a>
+    <a href="{{ url_for('contacto') }}" id="contactoLink" class="navButton" onclick="action_close();">Contacto</a>
+  </div>
+</nav>

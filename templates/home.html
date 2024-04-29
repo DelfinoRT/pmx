@@ -20,25 +20,7 @@
 </script>
 <body>
 <!-- Sidebar/menu -->
-<nav class="hideSmall" id="mySidebar">
-  <br>
-  <div class="container1">
-    <div class="small-logo">
-      <!-- Logo image -->
-      <img src="{{ url_for('static', filename='images/pmx-logo-round.png') }}">
-    </div>
-  </div>
-  <div class="navMenu">
-    <!-- Navigation links -->
-    <a href="index.html" onclick="action_close()" class="navButton active">Inicio</a> 
-    <a href="eventos.html" onclick="action_close()" class="navButton">Eventos</a> 
-    <a href="#" onclick="action_close()" class="navButton">Contenido</a> 
-    <a href="#" onclick="action_close()" class="navButton">Miembros</a> 
-    <a href="#" onclick="action_close()" class="navButton">Galería</a>
-    <a href="formatos.html" onclick="action_close()" class="navButton">Formatos</a>
-    <a href="contacto.html" onclick="action_close()" class="navButton">Contacto</a>
-  </div>
-</nav>
+{% include 'sidebar-menu.html' %}
 
 <!-- Top menu only on small screens -->
 <header class="container1 responsiveTitle hideLarge">
@@ -179,13 +161,11 @@
   </div>
 <!-- End page content -->
 </div>
-
 <!-- Footer -->
-<div class="footer container1">
-  <p>&copy; 2024 <strong>PeriquitosMex</strong> <br> Desarrollado por <a href="https://www.linkedin.com/in/delfino-rosales/" title="LinkedIn Delfino" target="_blank">Delfino Rosales</a></p>
-</div> 
-
+{% include 'footer.html' %}
 <!-- Script for sidebar functionality -->
 <script src="{{ url_for('static', filename='scripts.js') }}"></script>
+<script src="{{ url_for('static', filename='common-navbar.js') }}"></script>
+
 </body>
 </html>

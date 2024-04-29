@@ -363,6 +363,11 @@ a {
     }
 }
 
+.footer .footer-link:hover {
+  color: rgb(245, 241, 18);
+  transition: color 0.4s ease;
+}
+
 /* Small logo styles */
 .small-logo img {
     width: 70%;

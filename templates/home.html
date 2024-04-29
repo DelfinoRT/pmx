@@ -19,15 +19,9 @@
   gtag('config', 'G-FH9JT502WW');
 </script>
 <body>
-<!-- Sidebar/menu -->
+<!-- Sidebar/menu and header -->
 {% include 'sidebar-menu.html' %}
-
-<!-- Top menu only on small screens -->
-<header class="container1 responsiveTitle hideLarge">
-  <!-- Button to open sidebar -->
-  <a href="javascript:void(0)" onclick="action_open()" class="hamburguer">Ξ</a>
-  <span>PeriquitosMex</span>
-</header>
+{% include 'header.html' %}
 
 <!-- Dark overlay effect when opening sidebar on small screens -->
 <div class="overlay hideLarge" onclick="action_close()" style="cursor:pointer" id="myOverlay"></div>

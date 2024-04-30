@@ -47,6 +47,18 @@
     color: #333; /* Changes the text color on hover */
 }
 
+.flash-messages .alert {
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid transparent;
+    border-radius: 4px;
+    color: #fff;
+    background-color: #dc3545; /* Red for errors */
+}
+.alert-success {
+    background-color: #28a745; /* Green for success */
+}
+
 /* Reset and base styles */
 html {
     box-sizing: border-box;

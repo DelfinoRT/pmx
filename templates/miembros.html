@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PeriquitosMex - Miembros</title>
+  <!-- External stylesheet for Google Fonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Poppins">
+  <!-- Link to custom stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<!-- Sidebar/menu and header -->
+{% include 'sidebar-menu.html' %}
+{% include 'header.html' %}
+  
+  <!-- Main content -->
+  <div class="mainContainer">
+      <div class="container1">
+          <!-- Section title -->
+          <h1 class="titulo titulocontacto"><b>Benefits of Membership</b></h1>
+          <!-- Section content -->
+          <p class="paragraph1">
+              As a member of our association, you'll enjoy the following benefits:
+          </p>
+          <ul>
+              <li>Access to exclusive events</li>
+              <li>Discounts on merchandise</li>
+              <li>Networking opportunities</li>
+              <!-- Add more benefits as needed -->
+          </ul>
+
+          <!-- Button to go to login page -->
+          <a href="{{ url_for('login') }}" class="login-button">Login</a>
+      </div>
+  </div>
+
+<!-- Footer -->
+{% include 'footer.html' %}
+<!-- Script for sidebar functionality -->
+<script src="{{ url_for('static', filename='scripts.js') }}"></script>
+<script src="{{ url_for('static', filename='common-navbar.js') }}"></script>
+</html>

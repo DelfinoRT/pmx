@@ -27,7 +27,7 @@ class User(db.Model, UserMixin):
     city = db.Column(db.String(100), nullable=True)
     state = db.Column(db.String(100), nullable=True)
     aviary = db.Column(db.String(100), nullable=True)
-    password_hash = db.Column(db.String(60), nullable=False)
+    password_hash = db.Column(db.String(256), nullable=False)
     is_password_changed = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
     last_updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

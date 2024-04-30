@@ -4,3 +4,8 @@ psycopg2-binary
 Jinja2
 flask_sqlalchemy
 flask_login
+Flask-WTF
+SQLAlchemy
+WTForms
+Werkzeug
+email_validator

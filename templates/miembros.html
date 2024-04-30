@@ -28,12 +28,30 @@
               <li>Networking opportunities</li>
               <!-- Add more benefits as needed -->
           </ul>
-
-          <!-- Button to go to login page -->
-          <a href="{{ url_for('login') }}" class="login-button">Login</a>
+          <!-- Display user details if logged in -->
+          {% if current_user.is_authenticated %}
+            <h2>Welcome, {{ current_user.username }}!</h2>
+            <h3>User Details:</h3>
+            <ul>
+                <li>First Name: {{ current_user.first_name }}</li>
+                <li>Last Name: {{ current_user.last_name }}</li>
+                <li>Member ID: {{ current_user.member_id }}</li>
+                <!-- Add more user details as needed -->
+            </ul>
+            <!-- Button to log out -->
+            <form action="{{ url_for('logout') }}" method="post">
+              <button type="submit">Logout</button>
+            </form>
+            <!-- Button to change password -->
+            <form action="{{ url_for('change_password') }}" method="get">
+              <button type="submit">Change Password</button>
+            </form>
+          {% else %}
+            <!-- Button to go to login page -->
+            <a href="{{ url_for('login') }}" class="login-button">Login</a>
+          {% endif %}
       </div>
   </div>
-
 <!-- Footer -->
 {% include 'footer.html' %}
 <!-- Script for sidebar functionality -->

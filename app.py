@@ -86,8 +86,8 @@ def login():
         if user:
             if user.password_hash and user.check_password(password):
                 flask_session['user_id'] = user.id
-                flash('Login successful!', 'success')
-                return redirect(url_for('home'))
+                flash(f'Welcome, {user.username}!', 'success')
+                return redirect(url_for('miembros'))
             else:
                 flash('Invalid username or password or no password set', 'error')
         else:

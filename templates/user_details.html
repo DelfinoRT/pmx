@@ -73,6 +73,12 @@
             <span style="color: red;">{{ error }}</span>
             {% endfor %}
         </p>  
+        <p>
+            {{ form.membership_year.label }}: {{ form.membership_year(size=32) }}
+            {% for error in form.membership_year.errors %}
+            <span style="color: red;">{{ error }}</span>
+            {% endfor %}
+        </p>  
         <p>{{ form.submit() }}</p>
     </form>
 

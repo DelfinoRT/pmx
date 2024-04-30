@@ -1,7 +1,7 @@
-from flask import Flask, render_template, request, redirect, url_for, session as flask_session, flash, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, current_user, login_user, logout_user, login_required
-from sqlalchemy import create_engine, or_, cast, String
+from sqlalchemy import or_, cast, String
 from sqlalchemy.orm import sessionmaker
 import os
 from datetime import datetime
@@ -104,6 +104,7 @@ class CreateUserForm(FlaskForm):
   city = StringField('Ciudad', validators=[DataRequired(), Length(max=100)])
   state = StringField('Estado', validators=[DataRequired(), Length(max=100)])
   aviary = StringField('Aviario', validators=[DataRequired(), Length(max=100)])
+  membership_year = StringField('Membresia Activa', validators=[DataRequired(), Length(max=100)])
   submit = SubmitField('Crear usuario')
 
   def validate_username(self, username):
@@ -138,6 +139,7 @@ class UserDetailsForm(FlaskForm):
   city = StringField('Ciudad')
   state = StringField('Estado')
   aviary = StringField('Aviario')
+  membership_year = StringField('Membresia Activa')
   submit = SubmitField('Actualizar datos')
 
 
@@ -180,7 +182,7 @@ def change_password():
     current_user.is_password_changed = True
     db.session.commit()
     flash('Tu contraseña ha sido actualizada.', 'success')
-    return redirect(url_for('home'))
+    return redirect(url_for('profile'))
   return render_template('change_password.html',
                          title='Cambiar Contraseña',
                          form=form)
@@ -191,15 +193,15 @@ def change_password():
 def change_password_user():
   form = ChangePasswordForm()
   if form.validate_on_submit():
+    app.logger.info('Before updating password for user: %s', current_user.id)
     current_user.set_password(form.password.data)
-    current_user.is_password_changed = True
     db.session.commit()
+    app.logger.info('After updating password for user: %s', current_user.id)
     flash('Tu contraseña ha sido actualizada.', 'success')
     return redirect(url_for('home'))
   return render_template('change_password_user.html',
                          title='Cambiar Contraseña',
                          form=form)
-
 
 @app.route("/admin/create_user", methods=['GET', 'POST'])
 @login_required
@@ -287,10 +289,11 @@ def search_users():
             User.email.ilike(search_term),
             User.city.ilike(search_term),
             User.state.ilike(search_term),
-            User.aviary.ilike(search_term)
+            User.aviary.ilike(search_term),
+            cast(User.membership_year, String).ilike(search_term)
         )
      ).all()
-    results = [{"username": user.username, "first_name": user.first_name, "last_name": user.last_name, "member_id": user.member_id, "email": user.email, "phone": user.phone, "city": user.city, "state": user.state, "aviary": user.aviary} for user in users]
+    results = [{"username": user.username, "first_name": user.first_name, "last_name": user.last_name, "member_id": user.member_id, "email": user.email, "phone": user.phone, "city": user.city, "state": user.state, "aviary": user.aviary, "membership_year": user.membership_year} for user in users]
     return jsonify({"results": results})
   
 @app.route('/user/<int:user_id>/change_password', methods=['GET', 'POST'])

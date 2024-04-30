@@ -3,3 +3,4 @@ Gunicorn
 psycopg2-binary
 Jinja2
 flask_sqlalchemy
+flask_login

@@ -27,7 +27,7 @@
             <a href="{{ url_for('profile') }}">⏿ Ver perfil</a>
             <a href="{{ url_for('logout') }}">⛌ Salir</a>
           </p>
-          {% if current_user.user_type == "ADM" %}
+          {% if current_user.user_type == "admin" %}
               <a href="{{ url_for('manage_users') }}">☰ Gestionar Usuarios</a>
           {% endif %}
       {% else %}

@@ -5,7 +5,7 @@
     <title>Gestión de usuarios</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <style>
-        .recent-users-container {
+        .recent-users-container, .search-results-container {
             display: none;
         }
     </style>
@@ -39,15 +39,44 @@
                         <td>{{ user.username }}</td>
                         <td>{{ user.first_name }} {{ user.last_name }}</td>
                         <td>{{ user.member_id }}</td>
-                      <td>{{ user.created_at.strftime('%Y-%m-%d %H:%M:%S') if user.created_at else 'Not Available' }}</td>
+                        <td>{{ user.created_at.strftime('%Y-%m-%d %H:%M:%S') if user.created_at else 'Not Available' }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
         </table>
     </div>
+    
+  <!-- Search Users Form -->
+  <form id="searchForm">
+      <input type="text" name="search" id="searchPlaceholder" placeholder="Buscar usuarios..." aria-label="Search">
+      <button type="submit">Buscar</button>
+      <button type="button" onclick="clearSearch()">Limpiar Búsqueda</button>
+  </form>
+
+  <!-- Search Results Container: Now includes a table setup -->
+  <div id="searchResults" style="display:none;">
+      <p id="searchResultCount"></p>
+      <table class="user-list">
+          <thead>
+              <tr>
+                  <th>Usuario</th>
+                  <th>Nombre Completo</th>
+                  <th>Miembro #</th>
+                  <th>Email</th>
+                  <th>Teléfono</th>
+                  <th>Ciudad</th>
+                  <th>Estado</th>
+                  <th>Aviario</th>
+              </tr>
+          </thead>
+          <tbody id="userSearchResults">
+              <!-- Dynamically added search results will go here -->
+          </tbody>
+      </table>
+  </div>
 
     <div style="margin-bottom: 20px;">
-        <h3>Total Usuarios: {{ total_results }}</h3>
+        <h3>Total Usuarios en la base de datos: {{ total_results }}</h3>
     </div>
     <h3>Usuarios</h3>
     <table class="user-list">
@@ -61,6 +90,8 @@
                 <th>Ciudad</th>
                 <th>Estado</th>
                 <th>Aviario</th>
+                <th>Membresia</th>
+                <th>Tipo</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -75,6 +106,8 @@
                     <td>{{ user.city }}</td>
                     <td>{{ user.state }}</td>
                     <td>{{ user.aviary }}</td>
+                    <td>{{ user.membership_year }}</td>
+                    <td>{{ user.user_type }}</td>
                     <td class="user-actions">
                         <a href="{{ url_for('change_user_password', user_id=user.id) }}" class="action-link">Cambiar Contraseña</a>
                         <a href="{{ url_for('manage_user_details', user_id=user.id) }}" class="action-link">Actualizar Datos</a>
@@ -87,37 +120,77 @@
     <a href="{{ url_for('home') }}" class="back-link">⬅ Regresar</a>
 </div>
 <a href="#" class="back-to-top">Volver arriba ↑</a>
+
 <script>
-document.getElementById('toggleVisibilityBtn').addEventListener('click', function() {
-    var recentUsersContainer = document.getElementById('recentUsersContainer');
-    var toggleBtn = document.getElementById('toggleVisibilityBtn');
+    document.getElementById('toggleVisibilityBtn').addEventListener('click', function() {
+        var recentUsersContainer = document.getElementById('recentUsersContainer');
+        var toggleBtn = this; // Simpler approach using 'this'
 
-    if (recentUsersContainer.style.display === 'none' || recentUsersContainer.style.display === '') {
-        recentUsersContainer.style.display = 'block';
-        toggleBtn.textContent = 'Ocultar usuarios agregados recientemente'; // Change button text to 'Ocultar'
-    } else {
-        recentUsersContainer.style.display = 'none';
-        toggleBtn.textContent = 'Ver usuarios agregados recientemente'; // Change button text back to 'Ver'
+        if (recentUsersContainer.style.display === 'none' || recentUsersContainer.style.display === '') {
+            recentUsersContainer.style.display = 'block';
+            toggleBtn.textContent = 'Ocultar usuarios agregados recientemente';
+        } else {
+            recentUsersContainer.style.display = 'none';
+            toggleBtn.textContent = 'Ver usuarios agregados recientemente';
+        }
+    });
+
+    let mybutton = document.querySelector(".back-to-top");
+    window.onscroll = function() {scrollFunction()};
+
+    function scrollFunction() {
+        mybutton.style.display = document.body.scrollTop > 100 || document.documentElement.scrollTop > 100 ? "block" : "none";
     }
-});
 
-// Script for the "Back to Top" button
-let mybutton = document.querySelector(".back-to-top");
+    mybutton.addEventListener('click', function() {
+        document.body.scrollTop = 0;
+        document.documentElement.scrollTop = 0;
+    });
 
-window.onscroll = function() {scrollFunction()};
+    document.getElementById('searchForm').onsubmit = function(event) {
+        event.preventDefault();
+        const searchTerm = event.target.search.value.trim();
+        if (searchTerm) {
+            const searchUrl = `/manage_users/search?term=${encodeURIComponent(searchTerm)}`;
+            fetch(searchUrl)
+                .then(response => response.json())
+                .then(data => displaySearchResults(data))
+                .catch(error => console.error('Error during fetch:', error));
+        }
+    };
 
-function scrollFunction() {
-    if (document.body.scrollTop > 100 || document.documentElement.scrollTop > 100) {
-    mybutton.style.display = "block";
-    } else {
-    mybutton.style.display = "none";
-    }
-}
+  function clearSearch() {
+      document.getElementById('searchResults').style.display = 'none';
+      document.getElementById('searchResultCount').textContent = '';
+      document.getElementById('userSearchResults').innerHTML = '';
+      document.getElementById('searchPlaceholder').value = '';
+  }
 
-mybutton.addEventListener('click', function() {
-    document.body.scrollTop = 0; // For Safari
-    document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
-});
+  function displaySearchResults(data) {
+      // Ensure the results container is visible
+      document.getElementById('searchResults').style.display = 'block';
+      const tableBody = document.getElementById('userSearchResults');
+      tableBody.innerHTML = ''; // Clear existing results
+
+      // Indicate how many results were found
+ const countSpan = document.getElementById('searchResultCount');
+      countSpan.textContent = `Se encontraron ${data.results.length} resultados.`;
+
+      data.results.forEach((user) => {
+          // Create a row for each user
+          const row = tableBody.insertRow();
+
+          row.insertCell(0).textContent = user.username;
+          row.insertCell(1).textContent = `${user.first_name} ${user.last_name}`;
+          row.insertCell(2).textContent = user.member_id;
+          row.insertCell(3).textContent = user.email;
+          row.insertCell(4).textContent = user.phone;
+          row.insertCell(5).textContent = user.city;
+          row.insertCell(6).textContent = user.state;
+          row.insertCell(7).textContent = user.aviary;
+      });
+  }
 </script>
+
 </body>
 </html>

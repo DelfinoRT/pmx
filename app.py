@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session as flask_session, flash, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, LoginManager, current_user, login_user, logout_user, login_required
-from sqlalchemy import create_engine, or_
+from sqlalchemy import create_engine, or_, cast, String
 from sqlalchemy.orm import sessionmaker
 import os
 from datetime import datetime
@@ -153,24 +153,6 @@ def index():
 def profile():
   return render_template('user_profile.html', user=current_user)
 
-
-@app.route('/user-management')
-@login_required
-def user_management():
-  if not current_user.username.startswith("ADM-"):
-    flash("Unauthorized. Admins only.", "danger")
-    return redirect(url_for('home'))
-  users = User.query.all()
-
-  def extract_numeric_id(member_id):
-    numeric_part = ''.join(filter(str.isdigit, member_id))
-    return int(numeric_part) if numeric_part else 0
-
-  sorted_users = sorted(users,
-                        key=lambda user: extract_numeric_id(user.member_id))
-  return render_template('user_management.html', users=sorted_users)
-
-
 @app.route("/login", methods=['GET', 'POST'])
 def login():
   if current_user.is_authenticated:
@@ -222,7 +204,7 @@ def change_password_user():
 @app.route("/admin/create_user", methods=['GET', 'POST'])
 @login_required
 def admin_create_user():
-  if not current_user.username.startswith("ADM-"):
+  if current_user.user_type != "admin":
     flash('No tienes permisos para acceder a esta página.', 'danger')
     return redirect(url_for('home'))
 
@@ -273,25 +255,48 @@ def logout():
 @app.route('/manage_users', methods=['GET'])
 @login_required
 def manage_users():
-    print("Authenticated:", current_user.is_authenticated, "Username:",
-          current_user.username)
-    if current_user.user_type != "ADM":
+    if current_user.user_type != "admin":
         flash("Unauthorized. Admins only.", "danger")
         return redirect(url_for('home'))
 
     users = User.query.order_by(User.id).all()
     total_results = len(users)
-    last_three_users = User.query.order_by(User.created_at.desc()).limit(3).all()
+    last_three_users = User.query.order_by(User.member_id.desc()).limit(3).all()
 
     return render_template('manage_users.html',
                            users=users,
                            total_results=total_results,
                            last_three_users=last_three_users)
 
+@app.route('/manage_users/search', methods=['GET'])
+@login_required
+def search_users():
+    if current_user.user_type != "admin":
+        flash("Unauthorized. Admins only.", "danger")
+        return jsonify({"error": "unauthorized"}), 403
+      
+    search_term = f"%{request.args.get('term', '').lower()}%"
+    # Filter on other fields as before, and cast member_id to text for the search
+    users = User.query.filter(
+        or_(
+            User.username.ilike(search_term),
+            User.first_name.ilike(search_term),
+            User.last_name.ilike(search_term),
+            cast(User.member_id, String).ilike(search_term),  # Cast member_id to String
+            User.phone.ilike(search_term),
+            User.email.ilike(search_term),
+            User.city.ilike(search_term),
+            User.state.ilike(search_term),
+            User.aviary.ilike(search_term)
+        )
+     ).all()
+    results = [{"username": user.username, "first_name": user.first_name, "last_name": user.last_name, "member_id": user.member_id, "email": user.email, "phone": user.phone, "city": user.city, "state": user.state, "aviary": user.aviary} for user in users]
+    return jsonify({"results": results})
+  
 @app.route('/user/<int:user_id>/change_password', methods=['GET', 'POST'])
 @login_required
 def change_user_password(user_id):
-  if not current_user.username.startswith("ADM-"):
+  if current_user.user_type != "admin":
     flash("Unauthorized. Admins only.", "danger")
     return redirect(url_for('home'))
 
@@ -313,7 +318,7 @@ def change_user_password(user_id):
 @app.route('/user/<int:user_id>/details', methods=['GET', 'POST'])
 @login_required
 def manage_user_details(user_id):
-  if not current_user.username.startswith("ADM-"):
+  if current_user.user_type != "admin":
     flash("Unauthorized. Admins only.", "danger")
     return redirect(url_for('home'))
 

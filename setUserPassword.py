@@ -17,6 +17,6 @@ def set_user_password(username, new_password):
             print(f"User '{username}' not found")
 
 if __name__ == "__main__":
-    username = "delfino2"
+    username = "alberto1"
     new_password = "deldeoxisldn"
     set_user_password(username, new_password)

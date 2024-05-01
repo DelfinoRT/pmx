@@ -50,7 +50,7 @@
     </div>
     <a href="{{ url_for('home') }}" class="back-link"> ⬅ Regresar</a>
     <p></p>
-    <a href="{{ url_for('change_password_user') }}" class="back-link"> Cambiar Contraseña </a>
+  <a href="{{ url_for('change_user_password', user_id=user.id) }}" class="action-link">Cambiar Contraseña</a>
 </div>
 </body>
 </html>

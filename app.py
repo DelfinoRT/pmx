@@ -298,10 +298,6 @@ def search_users():
 @app.route('/user/<int:user_id>/change_password', methods=['GET', 'POST'])
 @login_required
 def change_user_password(user_id):
-  if current_user.user_type != "admin":
-    flash("Unauthorized. Admins only.", "danger")
-    return redirect(url_for('home'))
-
   user = User.query.get_or_404(user_id)
   form = ChangePasswordForm()
   if form.validate_on_submit():

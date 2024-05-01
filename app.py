@@ -14,8 +14,7 @@ from wtforms.validators import DataRequired, Length, EqualTo, ValidationError, E
 app = Flask(__name__)
 app.secret_key = '45fsa5!2p3r4553c1r3tK3y!'
 
-app.config[
-    'SQLALCHEMY_DATABASE_URI'] = f"postgresql+psycopg2://postgres.pklaisbyehmemsrxwiav:{os.getenv('DATABASE_PASSWORD')}@aws-0-us-west-1.pooler.supabase.com:6543/postgres"
+app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql+psycopg2://postgres.pklaisbyehmemsrxwiav:{os.getenv('DATABASE_PASSWORD')}@aws-0-us-west-1.pooler.supabase.com:6543/postgres"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
